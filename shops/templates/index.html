@@ -1,19 +1,245 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Nearby Shops</title>
-    </head>
+<head>
+	<title>spoton</title>
+	<meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico"/>
+  <link rel="stylesheet" type="text/css" href="{% static "style.css"%}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+</head>
 <body>
-    <h1>Nearby Shops</h1>
-    {% if shops %}
-    <ul>
-    {% for shop in shops %}
-        <li>
-        {{ shop.name }}: {{shop.distance}}
-        </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
+
+<div class="nav">
+    <div class="logo"><h1>spoton</h1></div>
+    <div class="navlist">
+        <h2 class="liitem"> <a href="" class="liitemlink"> Home</a> </h2>
+        <h2 class="liitem"> <a href="" class="liitemlink"> about </a></h2>
+        <h2 class="liitem"> <a href="" class="liitemlink"> contact us</a></h2>
+    </div>
+</div>
+
+<div class="serchbar">
+  <form id="serchform" class="serchform" >
+    {% csrf_token%}
+    <div class="serchfield">
+      <label for="city" class="labelf">city :</label>
+      <input type="text" id="city" value="all locations" class="inputf">
+    </div>
+    <div class="serchfield">
+      <label for="type" class="labelf">type :</label>
+      <input type="text" id="type" value="all types" class="inputf">
+    </div>
+    <div class="serchfield">
+      <label for="name" class="labelf">name :</label>
+      <input type="text" id="name" value="all names" class="inputf">
+    </div>
+    <div class="submit">
+      <input type="submit" value="submit" class="labelsub">
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <div class="leftside">
+    <h1 class="lefttit">Nearby Shops</h1>
+        {% if shops %}
+            {% for shop in shops %}
+                  <div class="shop">
+                    <div class="upside">
+                    <div class="divimg">
+                      <img src="{{ shop.shopimg.url}}" class="imgsh">
+                    </div>
+                    <div class="imgside">
+                      <div class="line"> <h1>NAME:</h1><h2>{{ shop.name }}</h2></div>
+                      <h2 class="line">SHOP KEEPER:{{ shop.shopkeeper }}</h2>
+                      <h2 class="line">TYPE:{{ shop.shoptype }}</h2>
+                      <h2 class="line">CITY:{{ shop.city }}</h2>
+                      <h2 class="line">ADRESS:{{ shop.address }}</h2>
+                    </div>
+                  </div>
+                    <div class="downside">
+                      <h2 class="linedes">{{ shop.description }}</h2>
+                    </div>
+                  </div>
+            {% endfor %}
+        {% endif %}
+  </div>
+
+ <div id="mapid" style="width:  72vw; height: 75vh;"></div>
+</div>
+
+
+<div class="footer">
+  © spoton All rights reserved.
+</div>
+
+  
+<script>
+	var mymap = L.map('mapid').setView([27.88,  78.07], 13);
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'nearshops',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+  var shops = L.geoJson(null,{
+                  onEachFeature:function(feature,layer){
+				            layer.bindPopup(
+                    	'shop name : '+feature.properties.name.toString()+'<br>'+'shop type : '+feature.properties.shoptype+'<br>'+'shop address : '+feature.properties.address+'<br>'+'shop city : '+feature.properties.city+'<br>'+'shop Description : '+feature.properties.description,
+                    );
+			            }
+		        });
+
+  shops.addTo(mymap);
+ 
+  $.ajax({
+            type: 'GET',
+            url: "{% url 'shopsdata' %}",
+            success: function (response) {
+                shops.addData( JSON.parse(response));
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+  $(document).on('submit','#serchform',function(e){
+      e.preventDefault();
+      $.ajax({
+        type:'POST',
+        url: "{% url 'shopsdata' %}",
+        data:{
+          city:$('#city').val(),
+          type:$('#type').val(),
+          name:$('#name').val(),
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function (response) {
+          ci = $('#city').val();
+          console.log(ci);
+          
+          // if u want to add serch by location in the futur remove this comment
+
+          // if (ci=='Andhra Pradesh') {
+          //   mymap.flyTo([16.50, 80.64], 7);
+          // }
+          // else if (ci=='Arunachal Pradesh') {
+          //   mymap.flyTo([27.06, 93.37], 9);
+          // }
+          // else if (ci=='Assam') {
+          //   mymap.flyTo([26.14, 91.77], 9);
+          // }
+          // else if (ci=='Bihar') {
+          //   mymap.flyTo([25.4, 85.1], 9);
+          // }
+          // else if (ci=='Chhattisgarh') {
+          //   mymap.flyTo([21.25, 81.60], 9);
+          // }
+          // else if (ci=='Goa') {
+          //   mymap.flyTo([15.50, 73.83], 9);
+          // }
+          // else if (ci=='Gujarat') {
+          //   mymap.flyTo([23.13, 72.41], 9);
+          // }
+          // else if (ci=='Haryana') {
+          //   mymap.flyTo([30.44, 76.47], 9);
+          // }
+          // else if (ci=='Himachal Pradesh') {
+          //   mymap.flyTo([31.6, 77.10], 9);
+          // }
+          // else if (ci=='Jharkhand') {
+          //   mymap.flyTo([23.35, 85.33], 9);
+          // }
+          // else if (ci=='Karnataka') {1
+          //   mymap.flyTo([12.97, 77.50], 9);
+          // }
+          // else if (ci=='Kerala') {
+          //   mymap.flyTo([8.5, 77], 9);
+          // }
+          // else if (ci=='Madhya Pradesh') {
+          //   mymap.flyTo([23.25, 77.417], 9);
+          // }
+          // else if (ci=='Maharashtra') {
+          //   mymap.flyTo([18.97, 72.820], 9);
+          // }
+          // else if (ci=='Manipur') {
+          //   mymap.flyTo([23.704851, 73.530769], 9);
+          // }
+          // else if (ci=='Meghalaya') {
+          //   mymap.flyTo([25.57, 91.88], 9);
+          // }
+          // else if (ci=='Mizoram') {
+          //   mymap.flyTo([23.36, 92.8], 9);
+          // }
+          // else if (ci=='Nagaland') {
+          //   mymap.flyTo([25.67, 94.12], 9);
+          // }
+          // else if (ci=='Odisha') {
+          //   mymap.flyTo([20.27, 85.82], 9);
+          // }
+          // else if (ci=='Punjab') {
+          //   mymap.flyTo([30.79, 75.84], 9);
+          // }
+          // else if (ci=='Rajasthan') {
+          //   mymap.flyTo([26.6, 73.8], 9);
+          // }
+          // else if (ci=='Sikkim') {
+          //   mymap.flyTo([27.33, 88.62], 9);
+          // }
+          // else if (ci=='Tamil Nadu') {
+          //   mymap.flyTo([13.09, 80.27], 9);
+          // }
+          // else if (ci=='Telangana') {
+          //   mymap.flyTo([17.366, 78.475], 9);
+          // }
+          // else if (ci=='Tripura') {
+          //   mymap.flyTo([23.84, 91.28], 9);
+          // }
+          // else if (ci=='Uttar Pradesh') {
+          //   mymap.flyTo([26.85, 80.91], 9);
+          // }
+          // else if (ci=='Uttarakhand') {
+          //   mymap.flyTo([30.33, 78.06], 9);
+          // }
+          // else if (ci=='West Bengal') {
+          //   mymap.flyTo([23.149651, 87.809324], 9);
+          // }
+          // else if (ci=='Andaman and Nicobar Islands') {
+          //   mymap.flyTo([11.68, 92.77], 9);
+          // }
+          // else if (ci=='Chandigarh') {
+          //   mymap.flyTo([30.45, 76.47], 9);
+          // }
+          // else if (ci=='Dadra and Nagar Haveli and Daman and Diu') {
+          //   mymap.flyTo([20.42, 72.83], 9);
+          // }
+          // else if (ci=='Jammu and Kashmir') {
+          //   mymap.flyTo([33.796388, 76.119383], 9);
+          // }
+          // else if (ci=='Ladakh') {
+          //   mymap.flyTo([34.10, 77.34], 9);
+          // }
+          // else if (ci=='Lakshadweep') {
+          //   mymap.flyTo([10.6, 72.6], 9);
+          // }
+          // else if (ci=='National Capital Territory of Delhi') {
+          //   mymap.flyTo([28.36, 77.13], 9);
+          // }
+          // else if (ci=='Puducherry') {
+          //   mymap.flyTo([11.91, 79.81], 9);
+          // };
+          shops.clearLayers();
+                shops.addData( JSON.parse(response));
+            },
+        error: function (response) {
+                console.log(response)
+            }
+      });
+  });
+</script>
 </body>
 </html>

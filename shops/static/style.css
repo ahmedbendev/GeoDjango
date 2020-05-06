@@ -1,0 +1,243 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+h1,h2{
+    margin: 0;
+    padding: 0;
+}
+/* styling navbar */
+.nav{
+    background-color: #347ef4;
+    width: 100%;
+    display: flex;
+    height: 9vh;
+    align-items: center;
+    padding-left: 3%;
+}
+.navlist {
+    display: flex;
+}
+
+.liitem{
+    padding-left: 30px;
+    font-size: 20px;
+    font-family: monospace;
+    color: white;
+    text-transform: capitalize;
+}
+.liitemlink:hover {
+    border-radius: 15px;
+    color: #347ef4;
+    padding: 10px 10px 10px 10px;
+    background-color: white;
+}
+.logo {
+    background: white;
+    color: #347ef4;
+    text-transform: uppercase;
+    font-family: monospace;
+    font-size: 16px;
+    border-radius: 15px;
+    padding: 10px 16px 10px 16px;
+    margin-right: 20px;
+}
+.liitemlink{
+    text-decoration: initial;
+    color: white;
+}
+
+/* styling serchbar */
+.serchbar{
+    height: 11vh;
+    padding-left: 30px;
+}
+.formserch {
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+}
+.titleserch {
+    font-size: 17px;
+    color: #2e2e47;
+    padding-bottom: 5px;
+    text-transform: capitalize;
+}
+
+.locationinput {
+    width: 30%;
+    height: 75%;
+}
+.nameinput {
+    width: 20%;
+    height: 75%;
+}
+.typeinput {
+    width: 20%;
+    height: 75%;
+}
+.sherchinput {
+    width: 30%;
+    height: 75%;
+}
+.inputst {
+    width: 90%;
+    height: 30px;
+    border: 3px solid #347ef4;
+    border-radius: 10px;
+    background: #dce3ef;
+}
+
+
+/* styling container */
+.container {
+    display: flex;
+    height: 75vh;
+}
+
+#mapid{
+
+}
+.serchform {
+    display: flex;
+    padding-left: 33px;
+}
+.leftside{
+    width: 28vw;
+    background-color: #347ef4;
+    overflow: auto;
+}
+
+/* styling footer */
+.footer{
+background-color: #347ef4;
+text-align: center;
+height: 5vh;
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+font-family: monospace;
+font-weight: bold;
+font-size: 17px;
+text-transform: uppercase;
+}
+#gis {
+    width: 100%;
+    height: 100%;
+}
+
+.serchfield {
+    width: 28%;
+    height: 11vh;
+    display: flex;
+    align-items: center;
+}
+.labelf {
+    font-size: 38px;
+    font-family: monospace;
+    color: #347ef4;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+input#city {
+    width: 52%;
+    height: 6vh;
+    border: 5px solid #347ef4;
+    border-radius: 16px;
+    font-size: 18px;
+    font-family: monospace;
+    padding-left: 11px;
+}
+input#type {
+    width: 52%;
+    height: 6vh;
+    border: 5px solid #347ef4;
+    border-radius: 16px;
+    font-size: 18px;
+    font-family: monospace;
+    padding-left: 11px;
+}
+input#name {
+    width: 52%;
+    height: 6vh;
+    border: 5px solid #347ef4;
+    border-radius: 16px;
+    font-size: 18px;
+    font-family: monospace;
+    padding-left: 11px;
+}
+.labelsub {
+    width: 157px;
+    background-color: #347ef4;
+    color: white;
+    font-size: 29px;
+    text-transform: uppercase;
+    font-family: monospace;
+    padding: 4px;
+    border-radius: 17px;
+    cursor: pointer;
+}
+.submit {
+    width: 13%;
+    display: flex;
+    align-items: center;
+}
+.leaflet-popup-content {
+    font-size: 16px;
+    margin: initial;
+    padding: 25px;
+    color: white;
+    font-family: monospace;
+    border-radius: 16px;
+    background: #347ef4;
+    text-transform: capitalize;
+}
+
+.imgside {
+    width: 65%;
+    padding-left: 17px;
+}
+.imgsh {
+    max-width: 100%;
+    padding: 7px;
+    border-radius: 30px;
+}
+.divimg {
+    width: 35%;
+}
+.upside {
+    display: flex;
+}
+.shop {
+    display: flex;
+    flex-direction: column;
+}
+.line {
+    font-size: 12px;
+    padding-top: 7px;
+    color: white;
+    font-family: monospace;
+    display: flex;
+    align-items: center;
+}
+.linedes {
+    font-size: 15px;
+    padding-top: 7px;
+    color: white;
+    padding-left: 18px;
+    padding-right: 18px;
+    font-family: monospace;
+    text-transform: capitalize;
+}
+.lefttit {
+    font-size: 34px;
+    color: white;
+    font-family: monospace;
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 8px;
+    padding-bottom: 9px;
+}
